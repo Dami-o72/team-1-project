@@ -1,0 +1,30 @@
+service: Team1Project
+
+frameworkVersion: '2'
+
+custom:
+  enterprise:
+    collectLambdaLogs: false
+
+package:
+  individually: true
+  excludeDevDependencies: false
+  include:
+    - src/**
+  exclude:
+    - "*"
+    - "*/**"
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  iam:
+    role:
+      permissionsBoundary: arn:aws:iam::351115496094:policy/ScopePermissions
+  region: eu-west-1
+
+functions:
+  hello:
+    handler: src/Team-1-Project/handler.hello
+

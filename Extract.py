@@ -17,6 +17,10 @@ def extract_data(csv_path):
             contents.append(row)
     return contents
 
+Transaction_data = extract_data(csv_path)
+
+
+
 
 
 
