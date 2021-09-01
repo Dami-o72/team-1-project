@@ -18,7 +18,7 @@ for data in Transaction_data:
 #Cleans 'Card_Details' removing personal data and Changes none to null for cash payments
 for data in Transaction_data:
     if data['Card_Details'] == 'None':
-        data['Card_Details'] = 'NULL'
+        data['Card_Details'] = 'CASH'
     else:
         data['Card_Details'] = data['Card_Details'].split(',')[0]
 
@@ -61,58 +61,3 @@ for x in Items:
     if x['Size'] == '' or x['Size'] == ' ':
         x['Size'] = 'Null'
 
-from connect import db, execute
-Item_string = ""
-
-
-for x in Items:
-    Item_string += "('" + x["Size"] + "','" + x["name"] + "','" + x["Price"] + "')" + ","
-
-Item_string = Item_string.rstrip(Item_string[-1])
-print(Item_string)
-#
-#
-# execute(
-#     [f"""
-#     INSERT INTO Items (size,item_name,price) VALUES {Item_string}
-#     ;"""]
-# )
-
-# locations_list = []
-# for Item in Transaction_data:
-#     if Item['Location'] not in locations_list:
-#         locations_list.append(Item['Location'])
-#
-# print(locations_list)
-#
-# Location_string = ""
-#
-#
-# for x in locations_list:
-#     Location_string += "(" + f"'{x}'" + ")" + ","
-# Location_string = Location_string.rstrip(Location_string[-1])
-#
-# print(Location_string)
-# execute(
-#     [f"""
-#     INSERT INTO locations (location) VALUES {Location_string}
-#     ;"""]
-# )
-
-card_data = []
-for item in Transaction_data:
-    if item['Card_Details'] not in card_data:
-        card_data.append(item['Card_Details'])
-
-print(card_data)
-
-# for x in locations_list:
-#     Location_string += "(" + f"'{x}'" + ")" + ","
-# Location_string = Location_string.rstrip(Location_string[-1])
-#
-# print(Location_string)
-# execute(
-#     [f"""
-#     INSERT INTO locations (location) VALUES {Location_string}
-#     ;"""]
-# )
