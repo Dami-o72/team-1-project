@@ -40,6 +40,7 @@ def connect():
 
 def execute(commands):
     """ create tables in the PostgreSQL database"""
+    result = []
     conn = None
     try:
         # connect to the PostgreSQL server
@@ -58,6 +59,32 @@ def execute(commands):
     finally:
         if conn is not None:
             conn.close()
+
+
+def execute_store_var(commands):
+    result = []
+    """ create tables in the PostgreSQL database"""
+    conn = None
+    try:
+        # connect to the PostgreSQL server
+        conn = psycopg2.connect(**db)
+        # create a cursor
+        cur = conn.cursor()
+        # execute each command in commands
+        for command in commands:
+            cur.execute(command)
+            result = cur.fetchone()
+        # close communication with the PostgreSQL database server
+        cur.close()
+        # commit the changes
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            return result
+
 
 
 def check(commands):
@@ -111,7 +138,6 @@ tables = \
     transaction_id SERIAL PRIMARY KEY,
     date_time TIMESTAMP,
     location_id INT REFERENCES locations(location_id),
-    basket_id INT ,
     total decimal(12,2),
     payment_id INT REFERENCES payments(payment_id)
     )
@@ -134,7 +160,7 @@ drop_tables = \
     drop table items
     """]
 
-#execute(drop_tables)
+# execute(drop_tables)
 execute(tables)
 
 
