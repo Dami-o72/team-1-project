@@ -29,7 +29,6 @@ custom:
     layer: true
 
 package:
-  individually: true
   excludeDevDependencies: false
   include:
     - src/**
