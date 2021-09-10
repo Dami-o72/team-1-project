@@ -24,7 +24,6 @@ custom:
   enterprise:
     collectLambdaLogs: false
   pythonRequirements:
-    dockerizePip: true
     slim: true
     layer: true
 
