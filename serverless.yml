@@ -1,0 +1,60 @@
+service: Team1Project
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  iam:
+    role: arn:aws:iam::351115496094:role/data-project-lambda-role
+  region: eu-west-1
+  
+plugins:
+  - serverless-python-requirements
+
+resources:
+  Resources:
+    IamRoleCustomResourcesLambdaExecution:
+      Type: AWS::IAM::Role
+      Properties:
+        PermissionsBoundary: arn:aws:iam::351115496094:policy/ScopePermissions
+
+custom:
+  enterprise:
+    collectLambdaLogs: false
+  pythonRequirements:
+    slim: true
+    layer: true
+
+package:
+  excludeDevDependencies: false
+  include:
+    - src/**
+  exclude:
+    - "*"
+    - "*/**"
+
+
+functions:
+  my-function:
+    handler: src/handler.handler
+    timeout: 30
+    memorySize: 1024
+    role: arn:aws:iam::351115496094:role/data-project-lambda-role
+    layers:
+      - !Ref PythonRequirementsLambdaLayer
+    events:
+      - s3:
+          bucket: delon3-team-1-bucket
+          event: s3:ObjectCreated:*
+          existing: true
+          rules:
+            - suffix: .csv
+    vpc:
+      securityGroupIds:
+        - sg-0afcfd2a983b80407
+      subnetIds:
+        - subnet-0f0145739a0011749
+        - subnet-0b5a9c546fd7ca400
+        - subnet-026cbc956a6cc5592
