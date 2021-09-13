@@ -16,6 +16,9 @@ on:
     branches:
       - main
 jobs:
+  build:
+    default:
+      image: node:15.5.1  
   deploy-dev:
     runs-on: ubuntu-latest
     steps:
