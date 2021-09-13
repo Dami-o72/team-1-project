@@ -1,34 +1,23 @@
-from connect import execute
+from src.Connect import execute, execute_store_var
 
-def load_payments(card_data):
-# 1) Formats Card details into string correctly and then loads to SQL database
-    Payments_string = ""
-
-    for x in card_data:
-        Payments_string += "(" + f"'{x}'" + ")" + ","
-
-    Payments_string = Payments_string.rstrip(Payments_string[-1])
-
-    print(Payments_string)
-    execute(
-        [f"""
-        INSERT INTO payments (payment_type) VALUES {Payments_string}
-        ;"""]
-    )
 def load_locations(locations_list):
 # 2) Formats Location Data into string correctly and then loads to SQL database
     Location_string = ""
 
     for x in locations_list:
-        Location_string += "(" + f"'{x}'" + ")" + ","
-    Location_string = Location_string.rstrip(Location_string[-1])
-
-    print(Location_string)
-    execute(
-        [f"""
-        INSERT INTO locations (location) VALUES {Location_string}
-        ;"""]
-    )
+        try:
+            Verify_loc = execute_store_var([f"""SELECT * FROM locations WHERE location = {x};"""])
+        except UndefinedColumn:
+            if Verify_loc:
+                continue
+            else:
+                Location_string += "(" + f"'{x}'" + ")" + ","
+                Location_string = Location_string.rstrip(Location_string[-1])
+            execute(
+                [f"""
+                INSERT INTO locations (location) VALUES {Location_string}
+                ;"""]
+            )
 
 def load_products(Individual_product_data):
 # 3) Formats Product Data into string correctly and then loads to SQL database

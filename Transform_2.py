@@ -1,41 +1,21 @@
-from Extract import extract_data, csv_path
-from connect import execute_store_var
+from src.Connect import execute_store_var
 
-Transaction_data = extract_data(csv_path)
 def General_Transformations(Transaction_data):
     for data in Transaction_data:
         del data['Name']
-        if data['Card_Details'] == 'None':
-            data['Card_Details'] = 'CASH'
-        else:
-            data['Card_Details'] = data['Card_Details'].split(',')[0]
-        data['Products'] = data['Products'].split(',')
+        del data['Card_Details']
+        for product in data['Products']:
+            if product['Size'] == '' or product['Size'] == ' ':
+                product['Size'] = 'NULL'
     return Transaction_data
 
 def Transform_products(Transaction_data):
     Individual_product_data = []
     for data in Transaction_data:
-        products_list = []
-        for line in ([data['Products'][i:i + 3] for i in range(0, len(data['Products']), 3)]):
-            New_Data = {'Size': line[0], 'Name': line[1], 'Price': line[2]}
-            products_list.append(New_Data)
-            data['Products'] = products_list
-            if New_Data not in Individual_product_data:
-                Individual_product_data.append(New_Data)
         for product in data['Products']:
-            if product['Size'] == '' or product['Size'] == ' ':
-                product['Size'] = 'NULL'
-    for Item in Individual_product_data:
-        if Item['Size'] == '' or Item['Size'] == ' ':
-            Item['Size'] = 'Null'
+            if product not in Individual_product_data:
+                Individual_product_data.append(product)
     return Individual_product_data
-
-def Transform_payments(Transaction_data):
-    card_data = []
-    for item in Transaction_data:
-        if item['Card_Details'] not in card_data:
-            card_data.append(item['Card_Details'])
-    return card_data
 
 def Transform_locations(Transaction_data):
     locations_list = []
@@ -49,9 +29,7 @@ def Transform_transactions(Transaction_data):
     for Item in Transaction_data:
         Loc_string = f"'{Item['Location']}'"
         Loc_id = execute_store_var([f"""SELECT location_id FROM locations WHERE location = {Loc_string} Limit 1"""])
-        Pay_string = f"'{Item['Card_Details']}'"
-        Pay_id = execute_store_var([f"""SELECT payment_id FROM payments WHERE payment_type = {Pay_string}"""])
-        New_T = {'Date_time': Item['Date_time'], 'Location_id': Loc_id[0], 'Total': Item['Price'], 'Payment_id': Pay_id[0]}
+        New_T = {'Date_time': Item['Date_time'], 'Location_id': Loc_id[0], 'Total': Item['Price'], 'Payment_id': Item['Payment_type']}
         Transaction_Final.append(New_T)
     return Transaction_Final
 
