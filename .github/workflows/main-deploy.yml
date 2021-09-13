@@ -32,6 +32,6 @@ jobs:
     - name: Deploy serverless-python-requirements
       run: sls plugin install -n serverless-python-requirements
     - name: Deploy Lambda functions
-      run: sls deploy 
+      run: SLS_DEBUG=1 sls deploy
     
 
