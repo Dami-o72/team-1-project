@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
       with:
-        node-version: '14.17.5'
+        node-version: '16.x'
     - name: Install Serverless Framework
       run: npm install -g serverless
     - name: Install NPM dependencies
@@ -30,7 +30,7 @@ jobs:
     - name: Serverless AWS authentication
       run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
     - name: Deploy serverless-python-requirements
-      run: pip install -r requirements.txt
+      run: sls plugin install -n serverless-python-requirements
     - name: Deploy Lambda functions
       run: SLS_DEBUG=1 sls deploy
     
