@@ -29,8 +29,6 @@ jobs:
       run: npm install
     - name: Serverless AWS authentication
       run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
-    - name: Deploy serverless-python-requirements
-      run: sls plugin install -n serverless-python-requirements
     - name: Deploy Lambda functions
       run: SLS_DEBUG=1 sls deploy
     
