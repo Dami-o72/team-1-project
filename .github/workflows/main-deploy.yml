@@ -25,12 +25,12 @@ jobs:
         node-version: '14.17.5'
     - name: Install Serverless Framework
       run: npm install -g serverless
-    - name: Serverless AWS authentication
-      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
     - name: Install NPM dependencies
       run: npm install
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
     - name: Deploy serverless-python-requirements
-      run: sls plugin install -n serverless-python-requirements
+      run: pip install -r requirements.txt
     - name: Deploy Lambda functions
       run: SLS_DEBUG=1 sls deploy
     
