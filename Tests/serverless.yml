@@ -9,7 +9,7 @@ provider:
   iam:
     role: arn:aws:iam::351115496094:role/data-project-lambda-role
   region: eu-west-1
-
+  
 plugins:
   - serverless-python-requirements
 
