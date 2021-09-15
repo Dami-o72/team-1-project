@@ -14,24 +14,22 @@ name: Team 1 Deploy
 on:
   push:
     branches:
-      - main
+      - testbranch2
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
         node-version: '14.17.5'
     - name: Install Serverless Framework
       run: npm install -g serverless
-    - name: Serverless AWS authentication
-      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
     - name: Install NPM dependencies
       run: npm install
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
     - name: Deploy serverless-python-requirements
       run: sls plugin install -n serverless-python-requirements
     - name: Deploy Lambda functions
       run: SLS_DEBUG=1 sls deploy
-    
-
